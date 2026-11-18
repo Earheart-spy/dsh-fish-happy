@@ -52,6 +52,7 @@ const exportNames = [
   'analyze',
   'beats',
   'findBeats',
+  'compactSelection',
   'groupCounts',
   'longestRun',
   'chooseLead',

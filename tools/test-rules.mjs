@@ -7,9 +7,9 @@ const instrumented = source.replace(
   'return { apply, inject }',
   `return { apply, inject, __rules: {
     createDeck, shuffle, sortHand, groupByRank, analyze, beats, findBeats,
-    createDouDizhuGame, becomeLandlord, resolveBid, applyPlay, applyPass,
-    chooseAiMove, chooseLead, createSnakeGame, queueSnakeDirection, stepSnake,
-    randomFood
+    compactSelection, createDouDizhuGame, becomeLandlord, resolveBid, applyPlay,
+    applyPass, chooseAiMove, chooseLead, createSnakeGame, queueSnakeDirection,
+    stepSnake, randomFood
   } }`
 )
 if (instrumented === source) {
@@ -48,9 +48,11 @@ const exportsObject = captured.factory((name) => {
 const rules = exportsObject.__rules
 const {
   createDeck,
+  sortHand,
   analyze,
   beats,
   findBeats,
+  compactSelection,
   createDouDizhuGame,
   resolveBid,
   applyPlay,
@@ -169,6 +171,52 @@ for (let round = 0; round < 300; round += 1) {
 }
 assert.equal(finishedGames, 300)
 
+// 拖动框选后自动裁掉多余的牌
+const straightHand = sortHand([
+  ...cardsOfRank(5, 2),
+  card(6),
+  ...cardsOfRank(7, 2),
+  card(8),
+  ...cardsOfRank(9, 3)
+])
+const straightIds = straightHand.map((entry) => entry.id)
+const straightAbove = analyze([3, 4, 5, 6, 7].map((rank) => card(rank)))
+const compacted = compactSelection(straightHand, straightIds, straightAbove)
+assert.deepEqual(
+  Array.from(compacted.map((id) => straightHand.find((entry) => entry.id === id).rank)).sort(
+    (left, right) => left - right
+  ),
+  [5, 6, 7, 8, 9],
+  '上家出 34567 时，从 5 拖到 9 应该只选中 56789'
+)
+assert.deepEqual(
+  Array.from(
+    compactSelection(straightHand, straightIds, null).map(
+      (id) => straightHand.find((entry) => entry.id === id).rank
+    )
+  ).sort((left, right) => left - right),
+  [5, 6, 7, 8, 9],
+  '自由出牌时也应该挑出最长的顺子'
+)
+const pairHand = sortHand([...cardsOfRank(6, 2), ...cardsOfRank(7, 2), ...cardsOfRank(8, 2)])
+const pairAbove = analyze(cardsOfRank(5, 2))
+assert.deepEqual(
+  Array.from(
+    compactSelection(pairHand, pairHand.map((entry) => entry.id), pairAbove).map(
+      (id) => pairHand.find((entry) => entry.id === id).rank
+    )
+  ),
+  [6, 6],
+  '上家出对 5 时应该只留最小的对 6'
+)
+const lowHand = sortHand([card(3), card(4)])
+const lowIds = lowHand.map((entry) => entry.id)
+assert.deepEqual(
+  compactSelection(lowHand, lowIds, straightAbove),
+  lowIds,
+  '凑不出能压过的牌时保留原选择，让玩家看到压不过'
+)
+
 // 贪吃蛇基础规则
 let snake = createSnakeGame()
 assert.equal(snake.status, 'ready')
@@ -250,4 +298,4 @@ const won = stepSnake(winState)
 assert.equal(won.status, 'won')
 assert.equal(won.body.length, 400)
 
-console.log('规则测试全部通过：牌型、比较、提示、农民让牌原因、300 局完整对局、贪吃蛇吃食/撞墙/撞自己/满屏。')
+console.log('规则测试全部通过：牌型、比较、提示、拖动裁剪、农民让牌原因、300 局完整对局、贪吃蛇吃食/撞墙/撞自己/满屏。')

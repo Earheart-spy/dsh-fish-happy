@@ -86,6 +86,13 @@ try {
     '房主快照里不能出现客人的手牌'
   )
 
+  // 出牌超时只替玩家走这一手，不能把座位改成永久托管。
+  assert.equal(host.room.seats[0].auto, false)
+  host.handleTimeout(0)
+  assert.equal(host.room.seats[0].auto, false, '超时不能把座位标记成托管')
+  await sleep(800)
+  assert.equal(host.room.seats[0].auto, false, '超时自动出牌后仍不能留下托管状态')
+
   host.leave()
   await waitFor(() => guest.getStatus().notice?.key === 'lan.notice.hostLeft', '客人收到房主退出提示')
   assert.equal(HOST_LEFT_TEXT, '房主摸鱼可能被抓住了，风紧撤呼！')
