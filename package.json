@@ -1,0 +1,47 @@
+{
+  "name": "dsh-fish-happy",
+  "version": "0.1.0",
+  "description": "「鱼乐一下」：左侧边栏里的轻量小游戏角，内置单人贪吃蛇、单人斗地主和局域网联机斗地主。",
+  "icon": "icon.svg",
+  "type": "module",
+  "main": "lib/index.js",
+  "author": "Earheart-spy",
+  "repository": "github:Earheart-spy/dsh-fish-happy",
+  "homepage": "https://github.com/Earheart-spy/dsh-fish-happy",
+  "bugs": {
+    "url": "https://github.com/Earheart-spy/dsh-fish-happy/issues"
+  },
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./locale/en.json": "./locale/en.json",
+    "./locale/zh.json": "./locale/zh.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "engines": {
+      "dsh": ">=0.2.2-rc.2"
+    },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-renderer",
+        "@deepseek-ai/dsh-client-ui-layout"
+      ],
+      "platform": "web"
+    }
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "icon.svg",
+    "locale",
+    "docs"
+  ],
+  "license": "MIT"
+}

@@ -1,0 +1,15 @@
+node_modules/
+.tmp-*
+.tmp-chrome/
+*.log
+.DS_Store
+Thumbs.db
+
+# 只在本机使用的调试脚本，不随插件发布。
+tools/ui-*.mjs
+tools/make-auth-cookie.mjs
+tools/debug-lan.mjs
+tools/list-dir.mjs
+tools/read-asar.mjs
+tools/search-asar.mjs
+tools/search-profile.mjs
