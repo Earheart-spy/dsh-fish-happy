@@ -120,7 +120,7 @@ $env:ELECTRON_RUN_AS_NODE='1'
 安装到当前 profile：
 
 ```text
-plugin_manager action=install_bundle target=C:\Users\18385\Documents\dsh\fish-happy
+plugin_manager action=install_bundle target=<仓库的绝对路径>
 ```
 
 ## 目录

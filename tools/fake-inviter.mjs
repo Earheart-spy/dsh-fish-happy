@@ -7,6 +7,8 @@ const discoveryPort = Number(process.argv[3] || 45911)
 const hostId = process.argv[4] || ''
 const autoStart = process.argv[5] === '1'
 const leaveAfterMs = Number(process.argv[6] || 0)
+const hostNickname = process.argv[7] || '测试房主'
+const hostAddress = process.argv[8] || '127.0.0.1'
 const inviter = new FishHappyLan({ nickname, discoveryPort })
 
 await inviter.enable()
@@ -20,9 +22,9 @@ const timer = setInterval(async () => {
     // 后启动的这个实例收不到对方心跳，所以这里直接填入已知的房主身份。
     inviter.peers.set(hostId, {
       instanceId: hostId,
-      nickname: '18385@spy',
-      address: '127.0.0.1',
-      host: '192.168.54.60',
+      nickname: hostNickname,
+      address: hostAddress,
+      host: hostAddress,
       status: 'idle',
       roomId: null,
       roomPort: null,
