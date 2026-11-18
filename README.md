@@ -22,6 +22,37 @@
 
 ## 安装到另一台电脑
 
+### 最快：一条命令（Windows）
+
+在另一台电脑上打开 PowerShell，执行：
+
+```powershell
+irm https://raw.githubusercontent.com/Earheart-spy/dsh-fish-happy/main/install.ps1 | iex
+```
+
+这条命令会自动完成四件事：
+
+1. 把仓库下载到 `%USERPROFILE%\Documents\dsh\fish-happy`；没有 Git 时会自动改用 ZIP 下载。
+2. 找到当前用户的 DSH `desktop` profile。
+3. 把这个插件写进 profile 的 `dependencies` 和 `dsh.profile.bundles`。
+4. 在 profile 的 `node_modules` 下建立指向插件目录的 Junction。
+
+安装完成后，完全退出 DSH 桌面端再重新打开，左侧边栏就会出现鱼形「鱼乐一下」图标。
+
+想换下载目录时，先设置环境变量再执行同一条命令：
+
+```powershell
+$env:DSH_FISH_HAPPY_DIR='D:\dsh-fish-happy'; irm https://raw.githubusercontent.com/Earheart-spy/dsh-fish-happy/main/install.ps1 | iex
+```
+
+如果 PowerShell 的脚本执行策略拦住了命令，用这一条：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/Earheart-spy/dsh-fish-happy/main/install.ps1 | iex"
+```
+
+下面的手动步骤作为备用，适合想自己控制目录，或者一条命令因为网络原因失败的情况。
+
 ### 准备
 
 - 这台电脑已经安装 DeepSeek Harness 桌面版，版本不低于 `0.2.2-rc.2`。
